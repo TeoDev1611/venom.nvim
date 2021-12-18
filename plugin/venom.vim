@@ -2,13 +2,19 @@
 " Version: 0.1.0
 " Mantainer: TeoDev1611
 
-if !executable('python') 
-   echoerr "Python is nesesarry for use this plugin"	
-   finish
-endif
+if exists('g:loaded_venom') | finish | endif
 
-" Utils
-function! venom#utils#runshell(command)
+" Setup and check the executables
+lua require 'venom'.setup()
+
+" Define the variables base
+let g:venom#script = luaeval('require "venom".python')	
+let g:venom#path = luaeval('require"venom".path')
+let s:command_base = 'python ' .. g:venom#script
+
+
+" The buffer out function
+function! venom#runshell(command)
    let command = join(map(split(a:command), 'expand(v:val)'))
    let winnr = bufwinnr('^' . command . '$')
    silent! execute  winnr < 0 ? 'botright new ' . fnameescape(command) : winnr . 'wincmd w'
@@ -18,18 +24,23 @@ function! venom#utils#runshell(command)
    silent! execute 'resize ' . line('$')
    silent! redraw
    silent! execute 'au BufUnload <buffer> execute bufwinnr(' . bufnr('#') . ') . ''wincmd w'''
-   silent! execute 'nnoremap <silent> <buffer> <LocalLeader>r :call <SID>venom#utils#runshell(''' . command . ''')<CR>'
+   silent! execute 'nnoremap <silent> <buffer> <LocalLeader>r :call <SID>venom#runshell(''' . command . ''')<CR>'
    echo 'Shell command ' . command . ' executed.'
 endfunction
 
-function! venom#utils#path#join(pathparts, ...) abort
-  let sep
-        \ = (a:0) == 0                       ? '/'
-        \ : type(a:1)==type(0) && (a:1) == 0 ? '/'
-        \ : (a:1) == 1                       ? '\'
-        \ : (a:1) =~ 'shellslash\|ssl'       ? (&ssl ? '\' : '/')
-        \ :                                    (a:1)
-  return join(a:pathparts, sep)
+
+" The call functions for the commands
+function! venom#run() abort
+	call venom#runshell(s:command)
 endfunction
 
-let g:venom#utils#plugindir = expand('<sfile>:p:h:h')
+function venom#log() abort
+	lua require 'venom'.log_path()
+endfunction
+
+" Define the commands
+command! VenomPath echomsg(g:venom#path)
+command! VenomLog call venom#log()
+command! -nargs=1 VenomCheck :lua require 'venom'.checker(<f-args>)
+
+let g:loaded_venom = 1
