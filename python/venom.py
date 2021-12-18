@@ -29,7 +29,7 @@ def main():
 def pipenv_info():
     file_exists = os.path.exists("./Pipfile")
     if not file_exists:
-        logging.error("Pipfile not exists")
+        print("ERROR: The pipenv file not exists is necessary")
         exit(2)
     cmd = subprocess.run(["pipenv", "--venv"], stdout=subprocess.PIPE)
     cmd_data = cmd.stdout.decode("utf-8")
