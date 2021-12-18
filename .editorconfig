@@ -10,9 +10,9 @@ indent_style = space
 indent_size = 4
 
 [*.lua]
-indent_size = space
-indent_style = 2
+indent_style = space
+indent_size =  2
 
 [*.vim]
-indent_size = space
-indent_style = 2
+indent_style = space
+indent_size = 2

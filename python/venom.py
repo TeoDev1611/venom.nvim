@@ -12,15 +12,12 @@ def main():
 
     # Define the program options and description
     parser.version = "1.0"
-    parser.description = (
-        "Venom utilitie for create a pipenv or poetry config for pyright"
-    )
+    parser.description = "Venom utilitie for create a pipenv config for pyright"
     parser.prog = "venom"
 
     # Add the options for the parser
 
     parser.add_option("-p", "--pipenv", action="store_true", dest="pipenv")
-    parser.add_option("-o", "--poetry", action="store_true", dest="poetry")
 
     # Parse the args
     (options, args) = parser.parse_args()
@@ -42,7 +39,7 @@ def pipenv_info():
     file = open("./pyrightconfig.json", "w")
     json.dump(data, file)
     file.close()
-    logging.info("File created successfully")
+    print("Work created succesfully")
 
 
 if __name__ == "__main__":

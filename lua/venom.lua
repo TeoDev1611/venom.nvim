@@ -5,6 +5,10 @@ local log = require 'venom.thunder.log'
 M.path = vim.fn.expand '<sfile>:p:h:h'
 M.python = util.path_join(M.path, 'python', 'venom.py')
 
+M.config = {
+  opts = { 'pipenv' },
+}
+
 M.setup = function()
   log:open()
   if vim.fn.executable 'python' ~= 1 then
@@ -19,7 +23,11 @@ end
 
 M.checker = function(opt)
   local data = {}
-  log:log('info', type(opt))
+
+  if type(opt) ~= 'string' then
+    log:log('fatal', 'The type is necessary a string')
+    return
+  end
 
   if vim.fn.executable 'pipenv' ~= 1 then
     data.pipenv = false
@@ -51,6 +59,22 @@ M.checker = function(opt)
   if opt ~= 'msg' or opt ~= 'table' then
     log:log('error', 'This not are a option valid the valid options are msg and table')
     return
+  end
+end
+
+M.run = function(opt)
+  if type(opt) ~= 'string' then
+    log:log('fatal', 'The option type is necessary a string')
+  end
+
+  for i = 1, table.getn(M.config.opts) do
+    if M.config.opts[i] == 'pipenv' then
+      if opt == 'pipenv' then
+        return ' -p'
+      end
+    else
+      log:log('fatal', 'Other option not found only pipenv supported actually')
+    end
   end
 end
 
