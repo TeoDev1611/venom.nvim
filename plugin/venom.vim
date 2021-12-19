@@ -17,7 +17,7 @@ let s:ask_param = 'What manager you want use?
 \ ----  
 \ '
 let s:command_base = 'python ' .. g:venom#script 
-let s:command_help = 'python ' .. g:venom#script .. '-h'
+let s:command_help = 'python ' .. g:venom#script .. ' -h'
 
 " The buffer out function
 function! venom#runshell(command)
